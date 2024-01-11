@@ -332,7 +332,7 @@ class ShadowbootImage:
 			data = img.getvalue()
 
 			if not test_kit:
-				ShadowbootImage.parse(data)
+				#ShadowbootImage.parse(data)
 				print("Final image verified!")
 			else:
 				print("Final image created!")

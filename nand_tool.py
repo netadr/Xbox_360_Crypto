@@ -459,7 +459,7 @@ class NANDImage:
 
 def main() -> None:
 	# p0 = Path(r"C:\Users\John\Desktop\xeBuild_1.21_zero\zero_rgl.bin")
-	p0 = Path(r"Z:/Xbox 360/xeBuild_1.21_zero/zero_rgl.bin")
+	p0 = Path(r"C:\Users\netse\Tools\J-Runner\166136510505\updflash.bin")
 	with NANDImage(p0.read_bytes(), MODE_FLASH) as ni:
 		# magic
 		ni.seek(0x80)
@@ -471,12 +471,14 @@ def main() -> None:
 		ni.seek(0x98)
 		ni.write(pack("6s", bytes.fromhex("0022485B4E17")))
 		# host port
-		ni.write(pack(">H", 50010))
+		ni.write(pack(">H", 50001))
 		# host address
-		ni.write(pack("4B", 192, 168, 1, 35))
+		ni.write(pack("4B", 169, 254, 144, 139))
 
-		# ni.seek(0)
-		# print(ni.read(512).hex().upper())
+		ni.seek(0)
+		
+		with open("test.bin", "wb") as test:
+			test.write(ni.read(ni.flash_size))
 
 if __name__ == "__main__":
 	main()

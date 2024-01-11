@@ -6,6 +6,7 @@ from enum import IntEnum
 from os.path import isfile
 from argparse import ArgumentParser
 
+from patch_checker import read_file, write_file
 from XeCrypt import *
 from build_lib import *
 

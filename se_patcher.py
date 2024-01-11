@@ -64,13 +64,13 @@ def main() -> int:
 
 	SB_PRV_KEY = load_and_verify_sb_prv()
 
-	con_rev = "Jasper"
+	con_rev = "Trinity"
 
-	base_dir = Path(f"Output/Extracted/{con_rev}/")
+	base_dir = Path(f"Shadowboots/{con_rev}/")
 
-	sd_data = (base_dir / "SD.bin").read_bytes()
+	sd_data = (base_dir / "sd_17489.bin").read_bytes()
 	se_data = (base_dir / "hypervisor.bin").read_bytes() + (base_dir / "kernel.exe").read_bytes()
-	se_patch_data = Path("Output/Zero/VRGL.bin").read_bytes()
+	se_patch_data = Path("Output/NonZero/RGL_hdd.bin").read_bytes()
 
 	((sd_len_nopad, sd_data), (se_len_nopad, se_data)) = patch_rehash_sign_se(sd_data, se_data, se_patch_data)
 
@@ -79,12 +79,8 @@ def main() -> int:
 	pack_into("16x", se_data, 0x10)
 
 	# write the SD and SE
-	Path(f"xeBuild_1.21/Builds/17559 - RGL/bootloaders/rgl/{con_rev.lower()}bl/sd_17489.bin").write_bytes(sd_data)
-	Path(f"xeBuild_1.21/Builds/17559 - RGL/bootloaders/rgl/{con_rev.lower()}bl/se_17559.bin").write_bytes(se_data)
-	# output XeBuild checksums
-	print(f"[{con_rev.lower()}bl]")
-	print(f"bootloaders/devkit/jasperbl_rgl/{con_rev.lower()}bl/sd_17489.bin,{crc32(sd_data[:sd_len_nopad]):08x}")
-	print(f"bootloaders/devkit/jasperbl_rgl/{con_rev.lower()}bl/se_17559.bin,{crc32(se_data[:se_len_nopad]):08x}")
+	Path(f"Shadowboots/{con_rev}/sd_17489_patched.bin").write_bytes(sd_data)
+	Path(f"Shadowboots/{con_rev}/se_17559_patched.bin").write_bytes(se_data)
 
 	return 0
 
