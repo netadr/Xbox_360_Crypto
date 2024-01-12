@@ -14,7 +14,7 @@
 	.long (RealAddr+8) #//ptr to string
 	
 1:
-	.string "\\Device\\Harddisk0\\Partition1\\Filesystems\\17489-dev\0"
+	.string "\\Device\\Harddisk0\\Partition1\\17489\0"
 2:
 	.align 2
 9:
