@@ -2,9 +2,21 @@
 #   VFuse patches for 17489/21256.18
 #============================================================================
 
-.set nand_fuses_offset, 0x00100000
+.if SBFUSES == 1
+.set fuses_offset, 0x0000CC00
+.else
+.set fuses_offset, 0x00100000
+.endif
+
 .set HvpGetFlashBaseAddress, 0x0000068C
 .set XeCryptCopyQwVec, 0x00000484  # XeCryptCopyQwVec(void* dest, void* src, int iter)
+
+#============================================================================
+#   Shadowboot/HV fuse patch
+#============================================================================
+.if SBFUSES == 1
+.include "../../sb_fuses.S"
+.endif
 
 #============================================================================
 #   disable copying transform key from SoC
@@ -137,17 +149,20 @@
 	MAKEPATCH  0x0000B188
 	.set CopyFuses, PatchAddr
 	.set FixFuses, (PatchAddr + (1f - 0f))
-
 #--------------------------------------------------
 # CopyFuses
 #--------------------------------------------------
 0:
 	mflr	r8
-	bla		HvpGetFlashBaseAddress
-	oris	r4, r3, nand_fuses_offset@h
-	ori		r4, r4, nand_fuses_offset@l # source
+.if SBFUSES == 1
+	add r3, r0, r0
+.else
+    bla		HvpGetFlashBaseAddress
+.endif
+	oris	r4, r3, fuses_offset@h
+	ori		r4, r4, fuses_offset@l # source
 
-    # copy fuses from nand_fuses_offset to 0x10000 - 0x60 in HV
+    # copy fuses from hv_fuses_offset to 0x10000 - 0x60 in HV
 	lis		r3, 1
 	subi	r3, r3, 0x60
 	# 0x60 bytes, 0xC 64bit vals to copy
